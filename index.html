@@ -1,0 +1,750 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Молитва судьбы</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Georgia,serif;color:#514c4c;background:linear-gradient(#a8d0eb,#e8f1f3 55%,#b4d0df);min-height:100vh}
+button{cursor:pointer;border:1px solid #fff9;border-radius:22px;padding:10px 18px;background:linear-gradient(#fffdf5,#e6d0a0);color:#69583f;font-weight:bold;box-shadow:0 3px 8px #526d7c30;transition:transform .15s,filter .15s}
+button:hover{filter:brightness(1.07);transform:translateY(-2px)}
+button:disabled{opacity:.4;cursor:not-allowed;transform:none}
+header{height:58px;padding:0 22px;display:flex;align-items:center;justify-content:space-between;background:#ffffff8c;backdrop-filter:blur(8px);border-bottom:1px solid white}
+.logo{letter-spacing:2px;font-weight:bold}
+.bones{background:#ffffffa8;border-radius:20px;padding:8px 15px}
+main{max-width:1100px;margin:auto;padding:20px}
+.tabs{display:flex;gap:9px;justify-content:center;margin-bottom:16px}
+.tab{width:105px;height:45px;border-radius:8px;background:#dbe9f0;border:1px solid #fff;display:grid;place-items:center;box-shadow:0 3px 8px #526d7c22}
+.tab.active{outline:3px solid #e8ca8c;background:#fff4db}
+.banner{position:relative;overflow:hidden;min-height:390px;border:1px solid #fff;border-radius:8px;background:linear-gradient(115deg,#f8f0df,#d3e5e9 55%,#e4b6a1);box-shadow:0 8px 30px #476d8c35}
+.banner:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#fff9 0%,#fff7 35%,transparent 72%)}
+.bannerText{position:relative;z-index:2;width:48%;padding:30px}
+.label{font-size:12px;letter-spacing:2px;color:#a66c40;font-weight:bold}
+h1{font-size:clamp(30px,4vw,48px);line-height:1;margin:13px 0;color:#514544}
+.bannerText p{line-height:1.5;font-size:14px}
+.hero{position:absolute;right:3%;bottom:0;height:100%;width:53%;display:flex;align-items:end;justify-content:center}
+.hero img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 7px 15px #4e536044)}
+.portraits{display:flex;gap:8px;margin:16px 0}
+.portraits img{width:48px;height:48px;object-fit:cover;border:2px solid #d9b86c;border-radius:7px;background:#ddd}
+.actions{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin:16px 0}
+.pullButtons{display:flex;gap:10px;flex-wrap:wrap}
+.pink{background:linear-gradient(#fff1fa,#e7b5d4);color:#87506f}
+.status{font:13px Arial;color:#687984;line-height:1.7}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}
+.rule{padding:13px;background:#ffffff9c;border:1px solid white;border-radius:8px;font:13px/1.5 Arial}
+.rule b{display:block;color:#b08046;font-size:16px;margin-bottom:4px}
+.inventory{display:flex;gap:8px;flex-wrap:wrap;font:13px Arial}
+.item{padding:8px 10px;background:#ffffffa6;border:1px solid white;border-radius:8px}
+.screen{display:none}
+.screen.active{display:block}
+.modal{position:fixed;inset:0;background:#243b50aa;z-index:10;display:none;align-items:center;justify-content:center;padding:14px}
+.modal.show{display:flex}
+.modalBox{background:#edf5f6;border:1px solid white;border-radius:12px;width:min(850px,100%);max-height:90vh;overflow:auto;padding:20px;text-align:center;box-shadow:0 10px 50px #152a3a66}
+.results{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:18px 0}
+.card{min-height:145px;padding:10px 5px;border-radius:9px;background:linear-gradient(145deg,#dbe8ef,#b8d0df);border:1px solid white;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;font:13px Arial;animation:pop .35s both}
+.card img{width:65px;height:70px;object-fit:cover;border-radius:5px}
+.card.r5{border:2px solid #e9b84e;box-shadow:inset 0 0 25px #ffcc5555}
+.card.r4{border:2px solid #ed8bce;box-shadow:inset 0 0 25px #f99de855}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* Анимация молитвы */
+#wish{display:none;position:fixed;inset:0;z-index:30;overflow:hidden;background:linear-gradient(#75b4e4,#b7d9ef 42%,#eff5f4 72%,#a6c4d6)}
+#wish.show{display:block}
+.clouds{position:absolute;inset:-20%;background:radial-gradient(ellipse at 10% 35%,#fff 0 7%,transparent 23%),radial-gradient(ellipse at 80% 30%,#ffffffdd 0 9%,transparent 25%),radial-gradient(ellipse at 40% 70%,#fff9 0 8%,transparent 25%);filter:blur(12px);animation:cloudmove 5s infinite alternate}
+.stars{position:absolute;inset:0;background-image:radial-gradient(#fff 1px,transparent 2px),radial-gradient(#fff9 1px,transparent 2px);background-size:73px 83px,107px 113px;background-position:12px 10px,42px 55px}
+.wishTitle{position:absolute;top:8%;width:100%;text-align:center;color:white;font-size:clamp(16px,3vw,25px);letter-spacing:3px;text-shadow:0 2px 8px #52718e}
+.orb{position:absolute;top:70%;left:24%;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 30% 25%,white,#e4faff 15%,#8ed1ff 48%,#4788dc 80%);box-shadow:0 0 25px 12px #c9efff,0 0 75px 30px #7bc5ff}
+.orb.gold{background:radial-gradient(circle at 30% 25%,white,#fff8d1 20%,#ffcf5b 55%,#f08a25 85%);box-shadow:0 0 30px 15px #fff1a8,0 0 90px 35px #ffc24c}
+.orb.pink{background:radial-gradient(circle at 30% 25%,white,#ffe7fb 20%,#ff9fe1 55%,#cb65ce 85%);box-shadow:0 0 30px 15px #ffe4fa,0 0 90px 35px #f18be9}
+.trail{position:absolute;left:27%;top:68%;width:4px;height:45vh;transform:rotate(25deg);background:linear-gradient(transparent,#fff,#c9f0ff,transparent)}
+.trail.gold{background:linear-gradient(transparent,#fff,#ffce57,transparent)}
+.trail.pink{background:linear-gradient(transparent,#fff,#fa8ee5,transparent)}
+.flash{position:absolute;inset:0;background:white;opacity:0;pointer-events:none;animation:flash 1.25s forwards}
+.wishCaption{position:absolute;bottom:12%;width:100%;text-align:center;color:white;font:14px Arial;letter-spacing:2px;text-shadow:0 2px 7px #456580}
+@keyframes fly{0%{left:23%;top:75%;opacity:0;transform:scale(.3)}15%{opacity:1}65%{left:55%;top:32%;transform:scale(1.5)}100%{left:83%;top:3%;opacity:.2;transform:scale(.3)}}
+@keyframes trail{0%{opacity:0;transform:rotate(25deg) scaleY(.1)}20%{opacity:1}100%{opacity:0;transform:rotate(25deg) translateY(-70%) scaleY(1.5)}}
+@keyframes flash{0%,70%{opacity:0}82%{opacity:.95}100%{opacity:0}}
+@keyframes cloudmove{to{transform:translateX(4%) translateY(-2%) scale(1.05)}}
+
+/* Экран отряда и боя */
+.party{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.char{padding:10px;border-radius:9px;background:#ffffffb8;border:1px solid white;text-align:center;cursor:pointer;font:13px Arial}
+.char.selected{outline:3px solid #e6b74f}
+.char img{width:100%;height:125px;object-fit:cover;border-radius:6px}
+.battlefield{position:relative;display:flex;align-items:end;justify-content:space-around;gap:8px;min-height:320px;margin:15px 0;padding:15px;background:linear-gradient(#9bc7e5,#e3e7d9 68%,#a4b4a7 68%,#748c8c);border:1px solid white;border-radius:10px;overflow:hidden}
+.battlefield:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 100%,#ffffff55,transparent 55%)}
+.fighter{position:relative;z-index:2;width:22%;max-width:150px;text-align:center;font:12px Arial;color:#fff;text-shadow:0 1px 4px #263b49;transform:translateX(0) scale(1);transform-origin:center bottom}
+.fighter img{width:100%;height:145px;object-fit:contain;filter:drop-shadow(0 5px 5px #3345)}
+.fighter.heroUnit{cursor:pointer}
+.fighter.heroUnit.active{filter:drop-shadow(0 0 9px #ffe38a)}
+.fighter.enemyUnit{cursor:default}
+.bar{height:8px;background:#34434b;border-radius:5px;overflow:hidden;margin:4px 0}
+.bar span{display:block;height:100%;background:#e96677;transition:width .35s}
+.battlePanel{padding:15px;background:#ffffffb9;border:1px solid white;border-radius:10px;font-family:Arial}
+.abilities{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.abilities button{border-radius:8px;text-align:left;line-height:1.4}
+.log{max-height:130px;overflow:auto;font:12px/1.5 Arial;background:#ffffffa6;padding:8px;margin-top:10px}
+.fighter-name{font-weight:bold}
+.floating-effect{position:absolute;z-index:8;pointer-events:none;font-size:28px;font-weight:bold;text-shadow:0 2px 7px #253b53;animation:floatAway 1s ease-out forwards;white-space:nowrap}
+@keyframes floatAway{0%{opacity:0;transform:translate(-50%,0) scale(.5)}15%{opacity:1}100%{opacity:0;transform:translate(-50%,-90px) scale(1.3)}}
+@keyframes heroDash{0%{transform:translateX(0) scale(1)}35%{transform:translateX(var(--dash)) scale(1.12)}60%{transform:translateX(var(--dash)) scale(1.12)}100%{transform:translateX(0) scale(1)}}
+@keyframes enemyDash{0%{transform:translateX(0) scale(1)}35%{transform:translateX(var(--dash)) scale(1.13)}58%{transform:translateX(var(--dash)) scale(1.13)}100%{transform:translateX(0) scale(1)}}
+@keyframes hitShake{0%,100%{translate:0 0}20%{translate:-9px 0}45%{translate:8px 0}70%{translate:-5px 0}}
+@keyframes hitFlash{0%,100%{filter:brightness(1)}30%{filter:brightness(3) saturate(2)}60%{filter:brightness(1.8)}}
+@keyframes spinDance{0%{transform:translateX(var(--dash)) rotate(0) scale(1.15)}50%{transform:translateX(var(--dash)) rotate(180deg) scale(1.3)}100%{transform:translateX(0) rotate(360deg) scale(1)}}
+@keyframes jumpAttack{0%{transform:translateX(0) translateY(0)}30%{transform:translateX(var(--dash)) translateY(-45px) scale(1.1)}55%{transform:translateX(var(--dash)) translateY(0) scale(1.15)}100%{transform:translateX(0) translateY(0)}}
+@keyframes recoil{0%,100%{transform:translateX(0)}35%{transform:translateX(var(--recoil))}70%{transform:translateX(calc(var(--recoil)*.4))}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 transparent}40%{box-shadow:0 0 35px var(--glow)}}
+@keyframes screenShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-3px,1px)}80%{transform:translate(3px,0)}}
+@keyframes projectile{0%{opacity:0;transform:translate(0,0) scale(.5) rotate(0)}15%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translate(var(--px),var(--py)) scale(1.3) rotate(var(--rot,180deg))}}
+@keyframes ringExpand{0%{opacity:1;transform:translate(-50%,-50%) scale(.1)}100%{opacity:0;transform:translate(-50%,-50%) scale(3.8)}}
+@keyframes horseRun{0%{transform:translateX(0) scale(1)}30%{transform:translateX(var(--dash)) scale(1.2)}60%{transform:translateX(var(--dash)) scale(1.2)}100%{transform:translateX(0) scale(1)}}
+@keyframes dustPuff{0%{opacity:.9;transform:translate(0,0) scale(.2)}100%{opacity:0;transform:translate(var(--px),-55px) scale(2)}}
+@keyframes noteBounce{0%{opacity:0;transform:translate(0,0) rotate(0) scale(.3)}15%{opacity:1}100%{opacity:0;transform:translate(var(--px),var(--py)) rotate(var(--rot)) scale(1.5)}}
+@keyframes titleSlam{0%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}25%{opacity:1;transform:translate(-50%,-50%) scale(.9)}45%{transform:translate(-50%,-50%) scale(1.1)}100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
+@keyframes projectileSpin{0%{opacity:0;transform:translate(0,0) rotate(0) scale(.4)}20%{opacity:1}100%{opacity:0;transform:translate(var(--px),var(--py)) rotate(720deg) scale(1.2)}}
+@keyframes healPulse{0%{opacity:0;transform:scale(.4)}35%{opacity:1;transform:scale(1.3)}100%{opacity:0;transform:scale(2)}}
+@keyframes ultimateFlash{0%,100%{opacity:0}20%{opacity:.9}55%{opacity:.3}}
+@keyframes stomp{0%{transform:translateY(-30px) scale(1.1)}50%{transform:translateY(5px) scale(.95)}100%{transform:translateY(0) scale(1)}}
+@keyframes dodge{0%,100%{transform:translateX(0)}35%{transform:translateX(-20px) rotate(-5deg)}70%{transform:translateX(10px) rotate(3deg)}}
+@media(max-width:650px){
+ main{padding:12px}
+ .banner{min-height:480px}
+ .bannerText{width:68%;padding:18px}
+ .hero{width:58%;height:57%;right:0;opacity:.85}
+ .banner:before{background:linear-gradient(180deg,#fff9,#fff5 55%,transparent)}
+ .rules{grid-template-columns:1fr}
+ .results{grid-template-columns:repeat(2,1fr)}
+ .party{grid-template-columns:repeat(2,1fr)}
+ .fighter img{height:90px}
+ .battlefield{min-height:240px;padding:5px;gap:2px}
+ .fighter{width:24%;font-size:10px}
+ .abilities{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">✦ МОЛИТВА СУДЬБЫ</div>
+  <div class="bones">🦴 <span id="bones">180</span></div>
+</header>
+
+<main>
+<section id="gacha" class="screen active">
+  <div class="tabs">
+    <div class="tab active">✦ Эрен</div>
+    <div class="tab">✧ Пихта</div>
+    <div class="tab">✦ Лера</div>
+    <div class="tab">✧ Вилена</div>
+  </div>
+  <div class="banner">
+    <div class="bannerText">
+      <div class="label">МОЛИТВА СОБЫТИЯ ПЕРСОНАЖА</div>
+      <h1>Атака титана</h1>
+      <p><b>Эрен · «Несокрушимая воля»</b></p>
+      <p>Шансы увеличены! Получи легендарного персонажа или пополни отряд новыми героями.</p>
+      <p>5★ Эрен / Пихта<br>4★ Лера / Вилена</p>
+      <div class="portraits">
+        <img src="photo3.png" alt="Эрен">
+        <img src="photo1.png" alt="Лера">
+        <img src="photo2.png" alt="Вилена">
+      </div>
+      <div class="status">
+        До 5★: <b id="pity">90</b> круток<br>
+        До гарантии 4★: <b id="pity4">10</b> круток
+      </div>
+    </div>
+    <div class="hero"><img src="photo3.png" alt="Эрен"></div>
+  </div>
+  <div class="actions">
+    <div class="status">🦴 Каждая молитва стоит одну косточку<br>Гарантия 5★: 90 круток · базовый шанс 0,6%</div>
+    <div class="pullButtons">
+      <button id="pull1">Помолиться 1 раз<br>🦴 ×1</button>
+      <button id="pull10" class="pink">Помолиться 10 раз<br>🦴 ×10</button>
+    </div>
+  </div>
+  <div class="rules">
+    <div class="rule"><b>5★ · Легендарка</b>Базовый шанс 0,6%. Эрен или Пихта с вероятностью 50/50. Гарантия на 90-й крутке.</div>
+    <div class="rule"><b>4★ · Персонаж</b>Каждые 10 круток гарантированно выпадает Лера или Вилена, если на этой крутке не выпала 5★.</div>
+    <div class="rule"><b>3★ · Предметы</b>Случайные мечи и талисманы Леди Баг выпадают при каждой обычной крутке.</div>
+  </div>
+  <h3>Инвентарь</h3>
+  <div class="inventory" id="inventory">Пока пусто</div>
+  <div class="actions">
+    <span class="status" id="hint">Получи легендарного персонажа, чтобы начать игру.</span>
+    <button id="start" disabled>Начать игру →</button>
+  </div>
+</section>
+
+<section id="partyScreen" class="screen">
+  <h2>Собери отряд</h2>
+  <p class="status">Выбери до четырёх открытых персонажей. Сергей станет доступен после первой легендарки.</p>
+  <div id="party" class="party"></div>
+  <div class="actions">
+    <button id="back">← К баннеру</button>
+    <button id="fight">В бой →</button>
+  </div>
+</section>
+
+<section id="battleScreen" class="screen">
+  <div class="actions">
+    <div><div class="label">ПОШАГОВЫЙ БОЙ</div><h2 id="battleTitle">Отряд против всадников</h2></div>
+    <span class="status">Раунд <b id="round">1</b></span>
+  </div>
+  <div class="battlefield" id="field"></div>
+  <div class="battlePanel">
+    <h3 id="chosenName">Выбери персонажа</h3>
+    <div class="status" id="chosenDesc"></div>
+    <div id="switches" class="pullButtons"></div>
+    <div class="abilities" id="abilities"></div>
+    <div class="log" id="log"></div>
+    <div class="actions">
+      <button id="again">Снова в бой</button>
+      <button id="editParty">Изменить отряд</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="modal" id="resultsModal">
+  <div class="modalBox">
+    <div class="label">РЕЗУЛЬТАТЫ МОЛИТВЫ</div>
+    <h2 id="resultTitle">Судьба ответила!</h2>
+    <p id="resultText"></p>
+    <div class="results" id="results"></div>
+    <div class="actions" style="justify-content:center">
+      <button id="continue" class="pink">Продолжить крутить</button>
+      <button id="startResult" disabled>Начать игру →</button>
+    </div>
+  </div>
+</div>
+
+<div id="wish">
+  <div class="clouds"></div><div class="stars"></div>
+  <div class="wishTitle">МОЛИТВА СОБЫТИЯ ПЕРСОНАЖА</div>
+  <div class="orb" id="orb"></div><div class="trail" id="trail"></div><div class="flash"></div>
+  <div class="wishCaption" id="caption">Судьба отвечает на зов...</div>
+</div>
+
+<script>
+const C={
+ eren:{name:"Эрен",img:"photo3.png",r:5,hp:145,atk:35,desc:"Сила титана и безграничный голод.",skill:"Удар титана",sd:"Рывок и сокрушительный удар",ult:"Титаническая трапеза",ud:"Титанический удар, пар и лечение"},
+ pikhta:{name:"Пихта",img:"photo5.png",r:5,hp:125,atk:38,desc:"Легендарная сила хвойного леса.",skill:"Хвойный залп",sd:"Веер острых иголок",ult:"Лесной апокалипсис",ud:"Взрыв хвои по всему полю"},
+ lera:{name:"Лера",img:"photo1.png",r:4,hp:105,atk:25,desc:"Танцевальные движения сокрушают врагов.",skill:"Танец на каблуках",sd:"Танцевальная серия ударов",ult:"Танцпол разрушения",ud:"Вращение и розовая ударная волна"},
+ vilena:{name:"Вилена",img:"photo2.png",r:4,hp:110,atk:23,desc:"Талисманы и магия Леди Баг.",skill:"Йо-йо Леди Баг",sd:"Бросок йо-йо",ult:"Счастливый талисман",ud:"Красные талисманы и лечение"},
+ sergey:{name:"Сергей",img:null,r:4,hp:100,atk:27,desc:"Рэп-баттл как боевое искусство.",skill:"Фристайл-удар",sd:"Ритмичный удар и летящие ноты",ult:"Дроп на бит",ud:"Мощная басовая волна"}
+};
+const swords=["Ржавый меч","Клинок новичка","Стальной тесак","Сломанная катана","Меч из кладовки"];
+const talismans=["Талисман Леди Баг","Красный амулет","Маленький йо-йо","Талисман удачи"];
+const $=id=>document.getElementById(id);
+
+let bones=180,pity=0,pity4=0,owned={},inventory=[],party=[],selected="";
+let states={},foes=[],round=1,busy=false,over=false;
+
+function screen(id){
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+ $(id).classList.add("active");
+}
+function legendary(){return !!(owned.eren||owned.pikhta)}
+function stars(n){return "★".repeat(n)}
+function portrait(c){
+ return c.img
+  ?`<img src="${c.img}" alt="${c.name}" onerror="this.style.display='none'">`
+  :`<div style="font-size:65px;height:145px;display:grid;place-items:center">🎤</div>`;
+}
+function update(){
+ $("bones").textContent=bones;
+ $("pity").textContent=90-pity;
+ $("pity4").textContent=10-pity4;
+ $("pull1").disabled=bones<1||busy;
+ $("pull10").disabled=bones<10||busy;
+ $("start").disabled=!legendary();
+ $("startResult").disabled=!legendary();
+ $("hint").textContent=legendary()?"Легендарка получена! Можно продолжить или начать игру.":"Получи легендарного персонажа, чтобы начать игру.";
+}
+function roll(){
+ bones--;pity++;pity4++;
+ let id,r;
+ if(pity>=90){
+  r=5;id=Math.random()<.5?"eren":"pikhta";pity=0;
+ }else if(Math.random()<.006){
+  r=5;id=Math.random()<.5?"eren":"pikhta";pity=0;
+ }else if(pity4>=10){
+  r=4;id=Math.random()<.5?"lera":"vilena";pity4=0;
+ }else if(Math.random()<.051){
+  r=4;id=Math.random()<.5?"lera":"vilena";pity4=0;
+ }else{
+  r=3;
+  const type=Math.random()<.58?"sword":"talisman";
+  const name=type==="sword"?swords[Math.floor(Math.random()*swords.length)]:talismans[Math.floor(Math.random()*talismans.length)];
+  inventory.push({name,type});
+  return {r,id:type+":"+name,name,type};
+ }
+ owned[id]=(owned[id]||0)+1;
+ if(r===5&&!owned.sergey)owned.sergey=1;
+ return {r,id,name:C[id].name,type:"character"};
+}
+function renderInventory(){
+ $("inventory").innerHTML=inventory.length?inventory.slice(-24).map(x=>`<span class="item">${x.type==="sword"?"⚔️":"🐞"} ${x.name} · 3★</span>`).join(""):"Пока пусто";
+}
+function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+async function animatePulls(got){
+ const wish=$("wish"),orb=$("orb"),trail=$("trail");
+ const has5=got.some(x=>x.r===5),has4=got.some(x=>x.r===4);
+ const color=has5?"gold":has4?"pink":"";
+ wish.classList.add("show");
+ $("caption").textContent=got.length===10?"МОЛИТВА ×10 · СУДЬБА ОТВЕЧАЕТ...":"МОЛИТВА · СУДЬБА ОТВЕЧАЕТ...";
+ orb.className="orb"+(color?" "+color:"");
+ trail.className="trail"+(color?" "+color:"");
+ orb.style.animation="none";trail.style.animation="none";
+ void orb.offsetWidth;
+ orb.style.animation="fly 1.25s ease-in forwards";
+ trail.style.animation="trail 1.25s ease-in forwards";
+ await wait(1500);
+ wish.classList.remove("show");
+}
+async function pull(n){
+ if(busy||bones<n)return;
+ busy=true;update();
+ const got=[];
+ for(let i=0;i<n;i++)got.push(roll());
+ update();renderInventory();
+ await animatePulls(got);
+ $("results").innerHTML="";
+ got.forEach(g=>{
+  const card=document.createElement("div");card.className="card r"+g.r;
+  const visual=g.type==="character"?portrait(C[g.id]):`<div style="font-size:43px">${g.type==="sword"?"⚔️":"🐞"}</div>`;
+  card.innerHTML=visual+`<b>${stars(g.r)}</b><strong>${g.name}</strong><small>${g.type==="character"?"Персонаж":g.type==="sword"?"Оружие":"Талисман"}</small>`;
+  $("results").appendChild(card);
+ });
+ const has5=got.some(g=>g.r===5),has4=got.some(g=>g.r===4);
+ $("resultTitle").textContent=has5?"ЛЕГЕНДАРНОЕ ВЫПАДЕНИЕ!":has4?"Розовое сияние!":"Молитва завершена";
+ $("resultText").textContent=has5?"Золотой шар принёс легендарного персонажа!":has4?"Розовый свет принёс нового персонажа.":"Выпали предметы редкости 3★.";
+ $("resultsModal").classList.add("show");
+ busy=false;update();
+}
+function chooseParty(){
+ party=Object.keys(owned).filter(id=>C[id]&&owned[id]>0).slice(0,4);
+ renderParty();screen("partyScreen");
+}
+function renderParty(){
+ $("party").innerHTML="";
+ Object.keys(owned).filter(id=>C[id]&&owned[id]>0).forEach(id=>{
+  const c=C[id],el=document.createElement("div");
+  el.className="char"+(party.includes(id)?" selected":"");
+  el.innerHTML=portrait(c)+`<h3>${c.name}</h3><b>${stars(c.r)}</b><p>HP ${c.hp} · ATK ${c.atk}</p><small>${party.includes(id)?"✓ В отряде":"Нажми, чтобы выбрать"}</small>`;
+  el.onclick=()=>{
+   if(party.includes(id))party=party.filter(x=>x!==id);
+   else if(party.length<4)party.push(id);
+   else{alert("Максимум 4 персонажа");return}
+   renderParty();
+  };
+  $("party").appendChild(el);
+ });
+}
+
+/* Визуальные эффекты боя */
+function fxElement(className,html,x,y,styles={}){
+ const el=document.createElement("div");
+ el.className=className;el.innerHTML=html;
+ el.style.left=x+"px";el.style.top=y+"px";
+ Object.assign(el.style,styles);
+ $("field").appendChild(el);
+ return el;
+}
+function centerOf(el){
+ const r=el.getBoundingClientRect(),f=$("field").getBoundingClientRect();
+ return {x:r.left+r.width/2-f.left,y:r.top+r.height*.35-f.top};
+}
+function floatText(target,text,color="#fff"){
+ if(!target)return;
+ const p=centerOf(target);
+ const el=fxElement("floating-effect",text,p.x,p.y,{color});
+ setTimeout(()=>el.remove(),1100);
+}
+function particleBurst(target,items,colors){
+ if(!target)return;
+ const p=centerOf(target);
+ items.forEach((item,i)=>{
+  const angle=(Math.PI*2*i/items.length)-Math.PI/2;
+  const distance=65+Math.random()*75;
+  const el=fxElement("floating-effect",item,p.x,p.y,{
+   color:colors[i%colors.length],
+   fontSize:(20+Math.random()*18)+"px",
+   animation:"projectileSpin .9s ease-out forwards",
+   "--px":Math.cos(angle)*distance+"px",
+   "--py":Math.sin(angle)*distance+"px",
+   "--rot":(360+Math.random()*360)+"deg"
+  });
+  setTimeout(()=>el.remove(),1000);
+ });
+}
+function ring(target,color="#fff",size=55){
+ if(!target)return;
+ const p=centerOf(target);
+ const el=fxElement("", "",p.x,p.y,{
+  width:size+"px",height:size+"px",border:"3px solid "+color,
+  borderRadius:"50%",position:"absolute",zIndex:5,pointerEvents:"none",
+  animation:"ringExpand .55s ease-out forwards"
+ });
+ setTimeout(()=>el.remove(),600);
+}
+function screenFlash(color="rgba(255,255,255,.7)"){
+ const el=document.createElement("div");
+ el.style.cssText=`position:absolute;inset:0;z-index:7;pointer-events:none;background:${color};animation:ultimateFlash .42s ease-out forwards`;
+ $("field").appendChild(el);
+ setTimeout(()=>el.remove(),450);
+}
+function shake(target){
+ if(!target)return;
+ target.style.animation="hitShake .3s ease";
+ setTimeout(()=>target.style.animation="",320);
+}
+function dashDistance(attacker,target,extra=0){
+ const a=attacker.getBoundingClientRect(),t=target.getBoundingClientRect();
+ const midA=a.left+a.width/2,midT=t.left+t.width/2;
+ return Math.round(midT-midA-(midT>midA?45:-45)+extra);
+}
+function moveUnit(el,target,isHero=true,extra=0){
+ return new Promise(resolve=>{
+  if(!el||!target){resolve();return}
+  const distance=dashDistance(el,target,extra);
+  el.style.setProperty("--dash",distance+"px");
+  el.style.animation=(isHero?"heroDash":"enemyDash")+" .68s cubic-bezier(.22,.8,.3,1) forwards";
+  setTimeout(()=>{el.style.animation="";resolve()},700);
+ });
+}
+function damageEffect(target,color="#fff",text="砰!"){
+ if(!target)return;
+ target.style.animation="hitFlash .35s ease";
+ floatText(target,text,color);
+ ring(target,color,42);
+ shake(target);
+ setTimeout(()=>target.style.animation="",370);
+}
+function unitElements(){
+ const heroes=[...$("field").querySelectorAll(".heroUnit")];
+ const enemies=[...$("field").querySelectorAll(".enemyUnit")];
+ return {heroes,enemies};
+}
+function heroElement(id){return $("field").querySelector(`[data-hero="${id}"]`)}
+function enemyElement(index){return $("field").querySelector(`[data-enemy="${index}"]`)}
+
+/* Уникальные визуальные эффекты персонажей */
+async function animateHeroAttack(id,type,targetIndex){
+ const attacker=heroElement(id),target=enemyElement(targetIndex);
+ if(!attacker||!target)return;
+ const c=C[id],ult=type==="ult",skill=type==="skill";
+ const waitShort=ms=>wait(ms);
+
+ await moveUnit(attacker,target,true);
+
+ if(id==="eren"){
+  if(ult){
+   screenFlash("rgba(255,178,69,.4)");
+   attacker.style.filter="drop-shadow(0 0 18px #ffb13b)";
+   floatText(attacker,"⚡ ТИТАН!", "#ffca64");
+   await waitShort(180);
+   particleBurst(target,["💥","🔥","⚡","💨","🍖"],["#ffdf87","#ff8e47","#fff"]);
+   damageEffect(target,"#ffbd50","КРАШ!");
+   $("field").style.animation="screenShake .35s";
+   setTimeout(()=>$("field").style.animation="",370);
+   await waitShort(400);
+   floatText(attacker,"🍖 +25 HP","#9cffb1");
+   attacker.style.filter="";
+  }else{
+   floatText(attacker,"巨人","#ffe3a1");
+   particleBurst(target,["💥","⚡","👊"],["#ffdf87","#fff","#ff994d"]);
+   damageEffect(target,"#ffc35a","УДАР ТИТАНА!");
+   await waitShort(300);
+  }
+ }else if(id==="pikhta"){
+  if(ult){
+   screenFlash("rgba(151,220,111,.3)");
+   particleBurst(target,["🌲","🌿","🍃","✨","💥","🌲","🍃","💫"],["#b7ef88","#f7ffc5","#72bb65"]);
+   floatText(target,"ЛЕСНОЙ АПОКАЛИПСИС","#baf79b");
+   ring(target,"#baf79b",65);
+  }else{
+   particleBurst(target,["🌲","🍃","🌿","➶","🍃","➶"],["#c7f6a0","#7ecf75","#fff"]);
+   floatText(target,"ХВОЙНЫЙ ЗАЛП","#baf79b");
+   damageEffect(target,"#baf79b","➶");
+  }
+  await waitShort(350);
+ }else if(id==="lera"){
+  if(ult){
+   attacker.style.setProperty("--dash",dashDistance(attacker,target)+"px");
+   attacker.style.animation="spinDance .85s ease-in-out forwards";
+   particleBurst(target,["💗","✨","💃","💖","✦","💗","✨"],["#ff8bcf","#ffdaef","#fff"]);
+   ring(target,"#ff8bcf",70);
+   floatText(target,"ТАНЦПОЛ!","#ff8bcf");
+   screenFlash("rgba(255,113,195,.22)");
+   await waitShort(650);
+   attacker.style.animation="";
+  }else{
+   particleBurst(target,["💗","✨","💃","💫"],["#ff8bcf","#ffd7ed","#fff"]);
+   floatText(target,"РАЗ-ДВА-ТРИ!","#ff8bcf");
+   damageEffect(target,"#ff8bcf","💥");
+   await waitShort(300);
+  }
+ }else if(id==="vilena"){
+  if(ult){
+   screenFlash("rgba(255,55,75,.23)");
+   particleBurst(target,["🐞","❤️","✨","🐞","❤️","✦","🐞"],["#ff5369","#ffdd54","#fff"]);
+   ring(target,"#ff5369",70);
+   floatText(target,"СЧАСТЛИВЫЙ ТАЛИСМАН!","#ff5a70");
+   party.forEach(pid=>{
+    const unit=heroElement(pid);
+    if(unit){
+     const p=centerOf(unit);
+     const heart=fxElement("floating-effect","💚",p.x,p.y,{color:"#8affbd",animation:"healPulse .8s ease-out forwards"});
+     setTimeout(()=>heart.remove(),850);
+    }
+   });
+   await waitShort(450);
+  }else{
+   particleBurst(target,["🪀","🔴","✨"],["#ff5468","#ffda52","#fff"]);
+   floatText(target,"ЙО-ЙО!","#ff6278");
+   damageEffect(target,"#ff6278","🪀");
+   await waitShort(300);
+  }
+ }else if(id==="sergey"){
+  if(ult){
+   screenFlash("rgba(177,120,255,.3)");
+   attacker.style.filter="drop-shadow(0 0 20px #d5a1ff)";
+   floatText(attacker,"DROP THE BEAT!","#e5b8ff");
+   particleBurst(target,["🎵","🎶","🎤","🔊","♫","♬","💥","🎵","🔊"],["#f0c1ff","#c3a2ff","#fff"]);
+   ring(target,"#d6a5ff",80);
+   await waitShort(250);
+   $("field").style.animation="screenShake .42s";
+   setTimeout(()=>$("field").style.animation="",450);
+   damageEffect(target,"#d5a1ff","BOOM!");
+   await waitShort(350);
+   attacker.style.filter="";
+  }else{
+   particleBurst(target,["♪","♫","🎵","♬","🎤"],["#f0c1ff","#c3a2ff","#fff"]);
+   floatText(target,"ФРИСТАЙЛ!","#e2b5ff");
+   ring(target,"#d6a5ff",50);
+   damageEffect(target,"#d6a5ff","BASS!");
+   await waitShort(300);
+  }
+ }
+ attacker.style.animation="";
+ attacker.style.filter="";
+}
+
+/* Анимации ответных атак табора */
+async function animateEnemyAttack(enemyIndex,targetId,ultimate=false){
+ const enemy=enemyElement(enemyIndex),target=heroElement(targetId);
+ if(!enemy||!target)return;
+ await moveUnit(enemy,target,false);
+ if(ultimate){
+  floatText(enemy,"🐎 ГАЛОП!","#ffe4a5");
+  particleBurst(target,["🐎","💨","🐴","💥","💨","🐎"],["#e6d0b1","#fff","#ffb15e"]);
+  ring(target,"#e9c18d",60);
+  screenFlash("rgba(178,130,83,.22)");
+  $("field").style.animation="screenShake .35s";
+  setTimeout(()=>$("field").style.animation="",370);
+  damageEffect(target,"#ffd6a1","ГАЛОП!");
+ }else{
+  particleBurst(target,["💨","🐎","💥"],["#e9d4b7","#fff","#d8b78c"]);
+  floatText(enemy,"УДАР КОПЫТОМ!","#ffe4a5");
+  damageEffect(target,"#f0d4a6","БУМ!");
+ }
+ await wait(250);
+}
+
+/* Отрисовка */
+function renderBattle(){
+ $("field").innerHTML="";
+ party.forEach(id=>{
+  const c=C[id],s=states[id],el=document.createElement("div");
+  el.className="fighter heroUnit"+(id===selected?" active":"");
+  el.dataset.hero=id;
+  el.innerHTML=portrait(c)+`<div class="fighter-name">${c.name}</div><div class="bar"><span style="width:${Math.max(0,s.hp/s.maxHp*100)}%"></span></div><div>HP ${s.hp}/${s.maxHp}</div><div class="bar"><span style="width:${s.energy}%;background:#9d91ee"></span></div><div>Энергия ${s.energy}</div>`;
+  el.onclick=()=>{if(!busy&&!over&&s.hp>0){selected=id;renderBattle()}};
+  $("field").appendChild(el);
+ });
+ foes.forEach((e,i)=>{
+  if(e.hp<=0)return;
+  const el=document.createElement("div");
+  el.className="fighter enemyUnit";
+  el.dataset.enemy=i;
+  el.innerHTML=e.img?`<img src="${e.img}" alt="${e.name}" onerror="this.style.display='none'"><div class="fighter-name">${e.name}</div><div class="bar"><span style="width:${e.hp/e.max*100}%"></span></div><div>HP ${e.hp}/${e.max}</div>`:`<div style="font-size:65px">🐎</div><div class="fighter-name">${e.name}</div><div class="bar"><span style="width:${e.hp/e.max*100}%"></span></div><div>HP ${e.hp}/${e.max}</div>`;
+  $("field").appendChild(el);
+ });
+ $("round").textContent=round;
+ const c=C[selected],s=states[selected];
+ if(!c||!s)return;
+ $("chosenName").textContent=c.name;
+ $("chosenDesc").textContent=c.desc;
+ $("switches").innerHTML="";
+ party.forEach(id=>{
+  const b=document.createElement("button");
+  b.textContent=C[id].name;b.disabled=states[id].hp<=0||busy||over;
+  b.onclick=()=>{selected=id;renderBattle()};
+  $("switches").appendChild(b);
+ });
+ $("abilities").innerHTML="";
+ if(over){
+  $("abilities").innerHTML='<button onclick="startBattle()">Сразиться снова</button>';
+  return;
+ }
+ const buttons=[
+  ["⚔ "+c.skill,c.sd,"skill",false],
+  ["✨ "+c.ult,c.ud,"ult",s.energy<100],
+  ["👊 Обычная атака","Быстрый удар · +30 энергии","basic",false],
+  ["🛡 Передышка","Восстановить 18 HP","defend",false]
+ ];
+ buttons.forEach(([name,desc,type,disabled])=>{
+  const b=document.createElement("button");
+  b.innerHTML=`<b>${name}</b><br><small>${desc}</small>`;
+  b.disabled=busy||disabled||s.hp<=0;
+  b.onclick=()=>act(type);
+  $("abilities").appendChild(b);
+ });
+ if(!aliveFoes().length){
+  over=true;$("battleTitle").textContent="Победа!";
+  write("Победа! Всадники повержены.");renderBattle();
+ }else if(!aliveParty().length){
+  over=true;$("battleTitle").textContent="Поражение";
+  write("Отряд пал. Попробуй снова.");renderBattle();
+ }
+}
+function aliveFoes(){return foes.filter(x=>x.hp>0)}
+function aliveParty(){return party.filter(id=>states[id]&&states[id].hp>0)}
+function write(s){
+ const e=document.createElement("div");e.textContent=s;$("log").prepend(e);
+}
+
+/* Обработка ходов */
+async function act(type){
+ if(busy||over)return;
+ const id=selected,c=C[id],s=states[id];
+ if(!c||s.hp<=0)return;
+ busy=true;renderBattle();
+
+ if(type==="defend"){
+  s.hp=Math.min(s.maxHp,s.hp+18);
+  s.energy=Math.min(100,s.energy+10);
+  write(c.name+" восстанавливает 18 HP.");
+  const unit=heroElement(id);
+  if(unit){
+   const p=centerOf(unit);
+   const heal=fxElement("floating-effect","💚 +18 HP",p.x,p.y,{color:"#8affbd",animation:"healPulse .8s ease-out forwards"});
+   setTimeout(()=>heal.remove(),850);
+  }
+  await wait(400);
+ }else{
+  const targets=aliveFoes();
+  if(!targets.length){busy=false;renderBattle();return}
+  const targetIndex=foes.findIndex(x=>x===targets[0]);
+  const target=foes[targetIndex];
+  let damage=c.atk;
+
+  if(type==="skill"){
+   damage=Math.round(c.atk*1.5);
+   s.energy=Math.min(100,s.energy+20);
+   write(c.name+" использует «"+c.skill+"»!");
+   await animateHeroAttack(id,"skill",targetIndex);
+   target.hp=Math.max(0,target.hp-damage);
+   write(target.name+" получает "+damage+" урона.");
+  }else if(type==="ult"){
+   damage=Math.round(c.atk*2.8);
+   s.energy=0;
+   write(c.name+" использует ультимейт «"+c.ult+"»!");
+   await animateHeroAttack(id,"ult",targetIndex);
+   if(id==="eren"){
+    s.hp=Math.min(s.maxHp,s.hp+25);
+    write("Эрен подкрепляется едой и восстанавливает 25 HP!");
+   }
+   if(id==="vilena"){
+    party.forEach(pid=>{states[pid].hp=Math.min(states[pid].maxHp,states[pid].hp+18)});
+    write("Талисман Вилены лечит отряд!");
+   }
+   if(id==="sergey"){
+    party.forEach(pid=>{states[pid].energy=Math.min(100,states[pid].energy+15)});
+    write("Рэп Сергея заряжает энергию команды!");
+   }
+   if(id==="lera")damage=Math.round(damage*1.2);
+   if(id==="pikhta"){
+    targets.forEach(x=>x.hp=Math.max(0,x.hp-Math.round(c.atk*1.2)));
+    write("Пихта атакует всех врагов!");
+   }else{
+    target.hp=Math.max(0,target.hp-damage);
+    write(target.name+" получает "+damage+" урона.");
+   }
+  }else{
+   s.energy=Math.min(100,s.energy+30);
+   write(c.name+" выполняет обычную атаку.");
+   await moveUnit(heroElement(id),enemyElement(targetIndex),true);
+   damageEffect(enemyElement(targetIndex),"#fff","УДАР!");
+   target.hp=Math.max(0,target.hp-damage);
+   write(target.name+" получает "+damage+" урона.");
+   await wait(200);
+  }
+ }
+
+ renderBattle();
+ if(!aliveFoes().length||!aliveParty().length){
+  busy=false;renderBattle();return;
+ }
+
+ // Враги ходят по очереди. Их анимация направлена к героям.
+ const enemyTurn=async()=>{
+  for(let i=0;i<foes.length;i++){
+   const e=foes[i];
+   if(e.hp<=0)continue;
+   const living=aliveParty();
+   if(!living.length)break;
+   const targetId=living[Math.floor(Math.random()*living.length)];
+   const ultimate=Math.random()<.25;
+   let dmg=e.atk;
+   if(ultimate)dmg=Math.round(dmg*1.8);
+   write(ultimate?e.name+" использует «Лошадиный галоп»!":e.name+" атакует "+C[targetId].name+".");
+   await animateEnemyAttack(i,targetId,ultimate);
+   states[targetId].hp=Math.max(0,states[targetId].hp-dmg);
+   write(C[targetId].name+" получает "+dmg+" урона.");
+   renderBattle();
+   await wait(250);
+   if(!aliveParty().length)break;
+  }
+ };
+
+ await enemyTurn();
+ round++;
+ busy=false;
+ renderBattle();
+}
+
+function startBattle(){
+ if(!party.length)return;
+ states={};
+ party.forEach(id=>states[id]={hp:C[id].hp,maxHp:C[id].hp,energy:0});
+ foes=[
+  {name:"Всадник",hp:125,max:125,atk:17,img:"photo4.png"},
+  {name:"Конный громила",hp:155,max:155,atk:20,img:null},
+  {name:"Главарь всадников",hp:210,max:210,atk:24,img:"photo4.png"}
+ ];
+ round=1;over=false;busy=false;selected=party[0];
+ $("log").innerHTML="";
+ $("battleTitle").textContent="Отряд против всадников";
+ write("Всадники приближаются. Начинается бой!");
+ screen("battleScreen");renderBattle();
+}
+
+$("pull1").onclick=()=>pull(1);
+$("pull10").onclick=()=>pull(10);
+$("continue").onclick=()=>{$("resultsModal").classList.remove("show");update()};
+$("start").onclick=chooseParty;
+$("startResult").onclick=()=>{if(legendary()){$("resultsModal").classList.remove("show");chooseParty()}};
+$("back").onclick=()=>screen("gacha");
+$("fight").onclick=startBattle;
+$("again").onclick=startBattle;
+$("editParty").onclick=()=>{renderParty();screen("partyScreen")};
+
+update();
+</script>
+</body>
+</html>
